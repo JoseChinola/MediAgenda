@@ -1,0 +1,16 @@
+﻿using MediAgenda.DTOs.Auth;
+using MediAgenda.DTOs.User;
+
+namespace MediAgenda.Interface
+{
+    public interface IUserService
+    {
+        Task<IEnumerable<UserDto>> GetAllAsync();
+        Task<UserDto?> GetByIdAsync(Guid id);
+        Task<UserDto?> GetByEmailAsync(string email);
+        Task<UserDto> CreateAsync(CreateUserDto createUserDto);
+        Task<bool> UpdateAsync(Guid id, CreateUserDto updateUserDto);
+        Task<bool> DeleteAsync(Guid id);
+        Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);
+    }
+}

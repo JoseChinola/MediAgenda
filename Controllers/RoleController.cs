@@ -1,8 +1,10 @@
 ﻿using MediAgenda.DTOs.Roles;
 using MediAgenda.Interface;
+using MediAgenda.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MediAgenda.Controllers
 {
@@ -35,23 +37,57 @@ namespace MediAgenda.Controllers
         public async Task<ActionResult<RoleDto>> Create(CreateRoleDto createRoleDto)
         {
             var role = await _roleService.CreateAsync(createRoleDto);
-            return CreatedAtAction(nameof(GetById), new { id = role.Id }, role);
+
+            var response = new ApiResponse<RoleDto>
+            {
+                Message = "Rol creado correctamente",
+                Success = true,
+                Data = role
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = role.Id }, response);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, CreateRoleDto updateRoleDto)
         {
             var updated = await _roleService.UpdateAsync(id, updateRoleDto);
-            if (updated == null) return NotFound();
-            return NoContent();
+            if (updated == null)
+            {
+                return NotFound(new ApiResponse<RoleDto>
+                {
+                    Success = false,
+                    Message = "Rol no encontrado",
+                    Data = null
+                });
+            }
+            return Ok(new ApiResponse<RoleDto>
+            {
+                Success = true,
+                Message = "Rol actualizado correctamente",
+                Data = updated
+            });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var deleted = await _roleService.DeleteAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            if (!deleted)
+            {
+                return NotFound(new ApiResponse<RoleDto>
+                {
+                    Success = false,
+                    Message = "Rol no encontrado",
+                    Data = null
+                });
+            }
+            return Ok(new ApiResponse<RoleDto>
+            {
+                Success = true,
+                Message = "Rol eliminado correctamente",
+                Data = null
+            });
         }
     }
 }

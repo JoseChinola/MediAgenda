@@ -62,7 +62,6 @@ namespace MediAgenda.Services
             return _mapper.Map<UserDto?>(user);
         }
 
-
         public async Task<bool> UpdateAsync(Guid id, CreateUserDto updateUserDto)
         {
             var user = await _userRepository.GetByIdAsync(id);
@@ -99,6 +98,24 @@ namespace MediAgenda.Services
                 Role = user.Role?.Name ?? "Usuario"
             };
         }
+
+        public async Task<bool> ChangePasswordAsync(Guid id, ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null) return false;
+
+            // Verify old password
+            var hashedOldPassword = ComputeSha256Hash(changePasswordDto.CurrentPassword);
+
+            if (user.PasswordHash != hashedOldPassword) return false;
+
+            // Update to new password
+            user.PasswordHash = ComputeSha256Hash(changePasswordDto.NewPassword);
+            _userRepository.Update(user);
+            return await _userRepository.SaveChangesAsync();
+        }
+
+
 
 
         private string ComputeSha256Hash(string rawData)

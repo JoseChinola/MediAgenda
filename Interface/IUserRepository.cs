@@ -1,4 +1,5 @@
-﻿using MediAgenda.Entities;
+﻿using MediAgenda.DTOs.User;
+using MediAgenda.Entities;
 
 namespace MediAgenda.Interface
 {

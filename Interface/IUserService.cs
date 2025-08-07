@@ -11,6 +11,7 @@ namespace MediAgenda.Interface
         Task<UserDto> CreateAsync(CreateUserDto createUserDto);
         Task<bool> UpdateAsync(Guid id, CreateUserDto updateUserDto);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> ChangePasswordAsync(Guid id, ChangePasswordDto changePasswordDto);
         Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);
     }
 }

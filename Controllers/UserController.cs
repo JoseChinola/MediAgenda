@@ -1,9 +1,15 @@
-﻿using MediAgenda.DTOs.Auth;
+﻿using System.Data;
+using System.Security.Claims;
+using MediAgenda.DTOs.Auth;
+using MediAgenda.DTOs.Roles;
 using MediAgenda.DTOs.User;
+using MediAgenda.Entities;
 using MediAgenda.Interface;
+using MediAgenda.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MediAgenda.Controllers
 {
@@ -30,6 +36,8 @@ namespace MediAgenda.Controllers
             return Ok(result);
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -41,7 +49,16 @@ namespace MediAgenda.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
-            if(user == null) return NotFound();
+            if(user == null)
+            {
+                return NotFound(
+                 new ApiResponse<RoleDto>
+                 {
+                     Message = "Usuario no encontrado",
+                     Success = false,
+                     Data = null
+                 });
+            }
             return Ok(user);
         }
 
@@ -49,7 +66,16 @@ namespace MediAgenda.Controllers
         public async Task<IActionResult> GetByEmail(string email)
         {
             var user = await _userService.GetByEmailAsync(email);
-            if(user == null) return NotFound();
+            if(user == null)
+            {
+                return NotFound(
+                 new ApiResponse<RoleDto>
+                 {
+                     Message = "Usuario no encontrado",
+                     Success = false,
+                     Data = null
+                 });
+            }
             return Ok(user);
         }
 
@@ -59,7 +85,14 @@ namespace MediAgenda.Controllers
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
             var createdUser = await _userService.CreateAsync(createUserDto);
-            return CreatedAtAction(nameof(GetById), new {id = createdUser.Id }, createdUser);
+
+            var response = new ApiResponse<UserDto>
+            {
+                Message = "Usuario creado correctamente",
+                Success = true,
+                Data = createdUser
+            };
+            return CreatedAtAction(nameof(GetById), new {id = createdUser.Id }, response);
         }
 
 
@@ -69,17 +102,83 @@ namespace MediAgenda.Controllers
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _userService.UpdateAsync(id, updateUserDto);
-            if(!result) return NotFound();
+            if(!result)
+            {
+                return NotFound(
+                 new ApiResponse<RoleDto>
+                 {
+                     Message = "Usuario no encontrado",
+                     Success = false,
+                     Data = null
+                 });
+            };
 
-            return NoContent();
+            return Ok(new ApiResponse<UserDto>
+            {
+                Success = true,
+                Message = "Rol actualizado correctamente",
+                Data = null
+            });
+        }
+
+        [HttpPut("change-password/{id}")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if(userId == null)
+            {
+                return Unauthorized(new ApiResponse<string>
+                {
+                    Message = "Usuario no autenticado",
+                    Success = false,
+                    Data = null
+                });
+            }
+
+            var result = await _userService.ChangePasswordAsync(Guid.Parse(userId), changePasswordDto);
+            if (!result)
+            {
+                return NotFound(
+                 new ApiResponse<RoleDto>
+                 {
+                     Message = "Usuario no encontrado",
+                     Success = false,
+                     Data = null
+                 });
+            };
+
+            return Ok(new ApiResponse<RoleDto>
+            {
+                Success = true,
+                Message = "Contraseña cambiada correctamente",
+                Data = null
+            });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _userService.DeleteAsync(id);
-            if(!result) return NotFound();
-            return NoContent();
+            if(!result)
+            {
+                return NotFound(
+                 new ApiResponse<RoleDto>
+                 {
+                     Message = "Usuario no encontrado",
+                     Success = false,
+                     Data = null
+                 });
+            };
+
+            return Ok(new ApiResponse<RoleDto>
+            {
+                Success = true,
+                Message = "Usuario eliminado correctamente",
+                Data = null
+            });
         }
 
     }

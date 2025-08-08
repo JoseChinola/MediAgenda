@@ -18,8 +18,11 @@ namespace MediAgenda.Entities
         [Required, EmailAddress]
         public string Email { get; set; }
 
+        [Phone]
+        public string? PhoneNumber { get; set; }
+
         [Required]
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         [Required]     
         public Guid RoleId { get; set; }

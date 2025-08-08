@@ -1,6 +1,6 @@
 ﻿using MediAgenda.Data;
 using MediAgenda.Entities;
-using MediAgenda.Interface;
+using MediAgenda.Interface.IUser;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediAgenda.Repositories
@@ -43,6 +43,20 @@ namespace MediAgenda.Repositories
             return await _context.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<User?> GetByIdWithRoleAsync(Guid id)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<IEnumerable<User>> GetAllWithRolesAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .ToListAsync();
         }
 
         public void Update(User user)

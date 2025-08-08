@@ -1,6 +1,6 @@
 ﻿using MediAgenda.Data;
 using MediAgenda.Entities;
-using MediAgenda.Interface;
+using MediAgenda.Interface.IRole;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 

@@ -1,5 +1,5 @@
 ﻿using MediAgenda.DTOs.Roles;
-using MediAgenda.Interface;
+using MediAgenda.Interface.IRole;
 using MediAgenda.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

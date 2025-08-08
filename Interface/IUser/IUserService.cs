@@ -1,7 +1,7 @@
 ﻿using MediAgenda.DTOs.Auth;
 using MediAgenda.DTOs.User;
 
-namespace MediAgenda.Interface
+namespace MediAgenda.Interface.IUser
 {
     public interface IUserService
     {

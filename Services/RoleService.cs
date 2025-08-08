@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediAgenda.DTOs.Roles;
 using MediAgenda.Entities;
-using MediAgenda.Interface;
+using MediAgenda.Interface.IRole;
 
 namespace MediAgenda.Services
 {

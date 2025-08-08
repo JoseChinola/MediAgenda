@@ -1,6 +1,6 @@
 ﻿using MediAgenda.DTOs.Roles;
 
-namespace MediAgenda.Interface
+namespace MediAgenda.Interface.IRole
 {
     public interface IRoleService
     {

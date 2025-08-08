@@ -12,6 +12,7 @@ namespace MediAgenda.Entities
         public string Specialty { get; set; }
 
         public string? Bio { get; set; }
+
         public User User { get; set; }
 
         public ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();

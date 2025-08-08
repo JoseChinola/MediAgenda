@@ -1,15 +1,13 @@
-﻿using System.Data;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using MediAgenda.DTOs.Auth;
 using MediAgenda.DTOs.Roles;
 using MediAgenda.DTOs.User;
-using MediAgenda.Entities;
 using MediAgenda.Interface;
+using MediAgenda.Interface.IUser;
 using MediAgenda.Responses;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace MediAgenda.Controllers
 {
@@ -116,7 +114,7 @@ namespace MediAgenda.Controllers
             return Ok(new ApiResponse<UserDto>
             {
                 Success = true,
-                Message = "Rol actualizado correctamente",
+                Message = "Usuario actualizado correctamente",
                 Data = null
             });
         }

@@ -1,6 +1,6 @@
 ﻿using MediAgenda.Entities;
 
-namespace MediAgenda.Interface
+namespace MediAgenda.Interface.IRole
 {
     public interface IRoleRepository
     {

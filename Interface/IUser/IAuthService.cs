@@ -1,6 +1,6 @@
 ﻿using MediAgenda.DTOs.Auth;
 
-namespace MediAgenda.Interface
+namespace MediAgenda.Interface.IUser
 {
     public interface IAuthService
     {

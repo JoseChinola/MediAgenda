@@ -1,5 +1,12 @@
 using MediAgenda.Data;
 using MediAgenda.Interface;
+using MediAgenda.Interface.IAppointment;
+using MediAgenda.Interface.IDoctor;
+using MediAgenda.Interface.IPatient;
+using MediAgenda.Interface.IPermission;
+using MediAgenda.Interface.IRole;
+using MediAgenda.Interface.IUser;
+using MediAgenda.Interface.Reception;
 using MediAgenda.Repositories;
 using MediAgenda.Services;
 using MediAgenda.Settings;
@@ -66,6 +73,15 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IReceptionService, ReceptionService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 
 

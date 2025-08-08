@@ -1,5 +1,6 @@
 ﻿using MediAgenda.DTOs.Auth;
 using MediAgenda.Interface;
+using MediAgenda.Interface.IUser;
 using System.Security.Cryptography;
 using System.Text;
 

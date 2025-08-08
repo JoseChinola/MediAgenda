@@ -3,6 +3,7 @@ using MediAgenda.DTOs.Auth;
 using MediAgenda.DTOs.User;
 using MediAgenda.Entities;
 using MediAgenda.Interface;
+using MediAgenda.Interface.IUser;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -32,7 +33,9 @@ namespace MediAgenda.Services
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            return _mapper.Map<UserDto>(user);
+            var userWithRole = await _userRepository.GetByIdAsync(user.Id);
+
+            return _mapper.Map<UserDto>(userWithRole);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -46,7 +49,7 @@ namespace MediAgenda.Services
 
         public async Task<IEnumerable<UserDto>> GetAllAsync()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();            
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 

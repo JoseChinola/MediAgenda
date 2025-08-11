@@ -1,18 +1,20 @@
-﻿using System.Security.Claims;
-using MediAgenda.DTOs.Auth;
+﻿using MediAgenda.DTOs.Auth;
 using MediAgenda.DTOs.Roles;
 using MediAgenda.DTOs.User;
 using MediAgenda.Interface;
 using MediAgenda.Interface.IUser;
 using MediAgenda.Responses;
+using MediAgenda.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace MediAgenda.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -36,6 +38,7 @@ namespace MediAgenda.Controllers
 
 
 
+        [HasPermission("canGetUser")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

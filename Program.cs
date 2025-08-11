@@ -6,7 +6,9 @@ using MediAgenda.Interface.IPatient;
 using MediAgenda.Interface.IPermission;
 using MediAgenda.Interface.IRole;
 using MediAgenda.Interface.IUser;
+using MediAgenda.Interface.IUserPermission;
 using MediAgenda.Interface.Reception;
+using MediAgenda.Middlewares;
 using MediAgenda.Repositories;
 using MediAgenda.Services;
 using MediAgenda.Settings;
@@ -28,6 +30,8 @@ builder.Services.Configure<JwtSettings>(jwtSection);
 // Register the JwtSettings as a singleton
 var jwtSettings = jwtSection.Get<JwtSettings>();
 var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
+
+Console.WriteLine($"JWT SecretKey: {jwtSettings.SecretKey}");
 
 // Register the service to generate tokens
 builder.Services.AddScoped<IJwtTokenService,  JwtTokenService>();
@@ -82,6 +86,8 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
+builder.Services.AddScoped<IUserPermissionRepository, UserPermissionRepository>();
 
 
 
@@ -119,6 +125,7 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -127,10 +134,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseMiddleware<PermissionMiddleware>();
 
 app.UseAuthorization();
 

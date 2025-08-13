@@ -2,6 +2,7 @@
 using MediAgenda.DTOs.UserPermission;
 using MediAgenda.Interface.IUserPermission;
 using MediAgenda.Responses;
+using MediAgenda.Security;
 using MediAgenda.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,5 +86,15 @@ namespace MediAgenda.Controllers
                 Data = permissions
             });
         }
+
+        [HttpGet("test-permission/{userId}")]
+        public async Task<IActionResult> TestPermission(Guid userId)
+        {
+            var hasPermission = await _userService.HasPermission(userId, "canGetUser");
+            Console.WriteLine($"Esto es lo permisos {hasPermission}");
+            return Ok(new { TienePermiso = hasPermission });
+        }
+
+      
     }
 }

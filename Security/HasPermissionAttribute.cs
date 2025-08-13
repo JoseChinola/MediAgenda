@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MediAgenda.Security
@@ -29,7 +30,8 @@ namespace MediAgenda.Security
                 return;
             }
 
-            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "id");
+            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
             if (userIdClaim == null)
             {
                 context.Result = new UnauthorizedResult();

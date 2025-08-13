@@ -42,7 +42,7 @@ namespace MediAgenda.Repositories
         {
             return await _context.UserPermissions
                .Include(up => up.Permission)
-               .AnyAsync(up => up.UserId == userId && up.Permission.Name == permissionName);
+               .AnyAsync(up => up.UserId == userId && up.Permission.Name.ToLower() == permissionName.ToLower());
         }
 
         public async Task SaveChangesAsync()

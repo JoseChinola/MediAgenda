@@ -21,6 +21,17 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+
 // jwt configuration
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
 
@@ -30,8 +41,6 @@ builder.Services.Configure<JwtSettings>(jwtSection);
 // Register the JwtSettings as a singleton
 var jwtSettings = jwtSection.Get<JwtSettings>();
 var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
-
-Console.WriteLine($"JWT SecretKey: {jwtSettings.SecretKey}");
 
 // Register the service to generate tokens
 builder.Services.AddScoped<IJwtTokenService,  JwtTokenService>();
@@ -59,6 +68,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings.Audience,
         ClockSkew = TimeSpan.Zero
     };
+ 
 });
 
 // database connection string
@@ -127,6 +137,7 @@ builder.Services.AddSwaggerGen(options =>
 
 
 var app = builder.Build();
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -138,9 +149,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseMiddleware<PermissionMiddleware>();
 
 app.UseAuthorization();
+app.UseMiddleware<PermissionMiddleware>();
 
 app.MapControllers();
 

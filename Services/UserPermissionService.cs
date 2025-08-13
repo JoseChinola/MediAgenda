@@ -53,7 +53,7 @@ namespace MediAgenda.Services
 
         public async Task<bool> HasPermission(Guid userId, string permissionName)
         {
-            return await _repository.HasPermissionAsync(userId, permissionName);
+            return await _repository.HasPermissionAsync(userId, permissionName);            
         }
     }
     

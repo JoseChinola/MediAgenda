@@ -1,6 +1,8 @@
-﻿using MediAgenda.Interface.IUserPermission;
+﻿using Azure;
+using MediAgenda.Interface.IUserPermission;
 using MediAgenda.Security;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace MediAgenda.Middlewares
 {
@@ -16,11 +18,13 @@ namespace MediAgenda.Middlewares
         public async Task InvokeAsync(HttpContext context, IUserPermissionRepository permissionRepo)
         {
             var endpoint = context.GetEndpoint();
-            var attribute = endpoint?.Metadata.GetMetadata<HasPermissionAttribute>();
+            var attribute = endpoint?.Metadata.GetMetadata<HasPermissionAttribute>();                               
 
             if (attribute != null)
             {
-                var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "nameid");               
+                var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+               
+
                 if (userIdClaim == null)
                 {
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -31,9 +35,11 @@ namespace MediAgenda.Middlewares
                 var userId = Guid.Parse(userIdClaim.Value);
                 var hasPermission = await permissionRepo.HasPermissionAsync(userId, attribute.PermissionName);
 
+                
                 if (!hasPermission)
                 {
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await context.Response.WriteAsync("Usuario sin permiso");
                     return;
                 }
             }

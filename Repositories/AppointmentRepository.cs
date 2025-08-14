@@ -34,7 +34,9 @@ namespace MediAgenda.Repositories
         {
             return await _context.Appointments
                 .Include(a => a.Doctor)
+                .ThenInclude(d => d.User)
                 .Include(a => a.Patient)
+                .ThenInclude(p => p.User)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -42,7 +44,9 @@ namespace MediAgenda.Repositories
         {
             return await _context.Appointments
                 .Include(a => a.Doctor)
+                .ThenInclude(d => d.User)
                 .Include(a => a.Patient)
+                .ThenInclude(p => p.User)
                 .ToListAsync();
         }
 
@@ -50,6 +54,10 @@ namespace MediAgenda.Repositories
         {
             return await _context.Appointments
                 .Where(a => a.DoctorId == doctorId)
+                .Include(a => a.Doctor)
+                .ThenInclude(d => d.User)
+                .Include(a => a.Patient)
+                .ThenInclude(p => p.User)
                 .ToListAsync();
         }
 
@@ -57,6 +65,10 @@ namespace MediAgenda.Repositories
         {
             return await _context.Appointments
                 .Where(a => a.PatientId == patientId)
+                .Include(a => a.Doctor)
+                .ThenInclude(d => d.User)
+                .Include(a => a.Patient)
+                .ThenInclude(p => p.User)
                 .ToListAsync();
         }
 

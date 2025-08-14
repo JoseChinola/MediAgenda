@@ -10,10 +10,5 @@ namespace MediAgenda.DTOs.Patient
         public string FullName { get; set; }
         public string? Address { get; set; }
         public UserDto User { get; set; } = new UserDto();
-        public AppointmentDto? Appointment { get; set; } = new AppointmentDto();
-
-
-
-
     }
 }

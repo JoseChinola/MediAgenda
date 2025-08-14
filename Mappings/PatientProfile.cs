@@ -11,6 +11,7 @@ namespace MediAgenda.Mappings
             CreateMap<Patient, PatientDto>()
                     .ForMember(dest => dest.FullName,
                     opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"));
+         
 
             CreateMap<CreatePatientDto, Patient>();
         }

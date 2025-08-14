@@ -41,7 +41,7 @@ namespace MediAgenda.Repositories
         {
             return await _context.Patients
                 .Include(p => p.User)
-                .ThenInclude(u => u.Role)
+                .ThenInclude(u => u.Role)         
                 .ToListAsync();
         }
 

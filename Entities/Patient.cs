@@ -11,7 +11,7 @@ namespace MediAgenda.Entities
         public DateTime BirthDate { get; set; }
         public string? Address { get; set; }
         public User User { get; set; }
-        public ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();
+        public ICollection<Appointment>? Appointments { get; set; }
 
     }
 }

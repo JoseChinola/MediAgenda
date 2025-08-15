@@ -65,21 +65,28 @@ namespace MediAgenda.Services
             return _mapper.Map<UserDto?>(user);
         }
 
-        public async Task<bool> UpdateAsync(Guid id, CreateUserDto updateUserDto)
+        public async Task<bool> UpdateAsync(Guid id, UpdateUserDto updateUserDto)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            if(user == null) return false;
+            if (user == null) return false;
 
-            _mapper.Map(updateUserDto, user);
+            if (!string.IsNullOrWhiteSpace(updateUserDto.FirstName))
+                user.FirstName = updateUserDto.FirstName;
 
-            // Update password hash if password provided
+            if (!string.IsNullOrWhiteSpace(updateUserDto.LastName))
+                user.LastName = updateUserDto.LastName;
+
+            if (!string.IsNullOrWhiteSpace(updateUserDto.Email))
+                user.Email = updateUserDto.Email;
+
+            if (!string.IsNullOrWhiteSpace(updateUserDto.PhoneNumber))
+                user.PhoneNumber = updateUserDto.PhoneNumber;
+
             if (!string.IsNullOrWhiteSpace(updateUserDto.Password))
-            {
-                user.PasswordHash = ComputeSha256Hash(updateUserDto.Password);
-            }
+                user.PasswordHash = updateUserDto.Password;
 
 
-            _userRepository.Update(user);
+
             return await _userRepository.SaveChangesAsync();
         }
 

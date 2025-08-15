@@ -98,9 +98,10 @@ namespace MediAgenda.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] CreateUserDto updateUserDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserDto updateUserDto)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
+            Console.WriteLine($"Updating user with ID: {updateUserDto}");
 
             var result = await _userService.UpdateAsync(id, updateUserDto);
             if(!result)
@@ -123,13 +124,14 @@ namespace MediAgenda.Controllers
         }
 
         [HttpPut("change-password/{id}")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordDto changePasswordDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if(userId == null)
+            Console.WriteLine("UserID", id);
+
+            if(id == null)
             {
                 return Unauthorized(new ApiResponse<string>
                 {
@@ -139,7 +141,7 @@ namespace MediAgenda.Controllers
                 });
             }
 
-            var result = await _userService.ChangePasswordAsync(Guid.Parse(userId), changePasswordDto);
+            var result = await _userService.ChangePasswordAsync(id, changePasswordDto);
             if (!result)
             {
                 return NotFound(

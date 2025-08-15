@@ -14,6 +14,9 @@ namespace MediAgenda.Mappings
          
 
             CreateMap<CreatePatientDto, Patient>();
+
+            CreateMap<UpdatePatientDto, Patient>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -96,7 +96,7 @@ namespace MediAgenda.Controllers
             return Ok(
                  new ApiResponse<UpdateAppointmentStatusDto>
                  {
-                     Message = "Estado de la cita actualizado correctamente.",
+                     Message = $"Cita {dto.Status} correctamente.",
                      Success = true,
                      Data = dto
                  });
@@ -140,10 +140,25 @@ namespace MediAgenda.Controllers
         public async Task<IActionResult> RescheduleAppointment([FromBody] UpdateAppointmentDto dto)
         {
             var result = await _service.RescheduleAppointmentAsync(dto);
-            if (!result)
-                return BadRequest("No se pudo reprogramar la cita. Verifique que no esté completada, cancelada o que el horario esté disponible.");
 
-            return Ok("Cita reprogramada exitosamente.");
+            if (!result)
+            {
+                return BadRequest(
+                 new ApiResponse<UpdateAppointmentDto>
+                 {
+                     Message = "No se pudo reprogramar la cita",
+                     Success = false,
+                     Data = null
+                 });
+            }
+            return Ok(
+                 new ApiResponse<UpdateAppointmentDto>
+                 {
+                     Message = "Cita reprogramada exitosamente..",
+                     Success = true,
+                     Data = dto
+                 });
+            
         }
     }
 }

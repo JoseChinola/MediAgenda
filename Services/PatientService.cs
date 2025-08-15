@@ -43,7 +43,7 @@ namespace MediAgenda.Services
             return _mapper.Map<PatientDto?>(patient);
         }
 
-        public async Task<bool> UpdateAsync(Guid userId, CreatePatientDto updatePatientDto)
+        public async Task<bool> UpdateAsync(Guid userId, UpdatePatientDto updatePatientDto)
         {
             var patient = await _patientRepository.GetByUserIdAsync(userId);
             if (patient == null) return false;

@@ -11,7 +11,12 @@ namespace MediAgenda.Mappings
             CreateMap<CreateDoctorDto, Doctor>();
             CreateMap<Doctor, DoctorDto>()
               .ForMember(dest => dest.FullName,
-               opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"));
+               opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"))
+              .ForMember(dest => dest.Email,
+               opt => opt.MapFrom(src => src.User.Email))
+              .ForMember(dest => dest.phoneNumber,
+               opt => opt.MapFrom(src => src.User.PhoneNumber))
+              ;
              
             
              

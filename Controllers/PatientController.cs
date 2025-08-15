@@ -69,7 +69,7 @@ namespace MediAgenda.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<IActionResult> Update(Guid userId, [FromBody] CreatePatientDto updatePatientDto)
+        public async Task<IActionResult> Update(Guid userId, [FromBody] UpdatePatientDto updatePatientDto)
         {
             var result = await _patientService.UpdateAsync(userId, updatePatientDto);
 

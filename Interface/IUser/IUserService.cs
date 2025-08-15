@@ -9,7 +9,7 @@ namespace MediAgenda.Interface.IUser
         Task<UserDto?> GetByIdAsync(Guid id);
         Task<UserDto?> GetByEmailAsync(string email);
         Task<UserDto> CreateAsync(CreateUserDto createUserDto);
-        Task<bool> UpdateAsync(Guid id, CreateUserDto updateUserDto);
+        Task<bool> UpdateAsync(Guid id, UpdateUserDto updateUserDto);
         Task<bool> DeleteAsync(Guid id);
         Task<bool> ChangePasswordAsync(Guid id, ChangePasswordDto changePasswordDto);
         Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);

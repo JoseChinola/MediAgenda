@@ -60,6 +60,7 @@ namespace MediAgenda.Services
             if (appointment.Status == "Completada" || appointment.Status == "Cancelada")
                 return false;
 
+           
             // Validar estados permitidos si deseas
             var validStatuses = new[] { "Pendiente", "Completada", "Cancelada" };
             if (!validStatuses.Contains(dto.Status)) return false;

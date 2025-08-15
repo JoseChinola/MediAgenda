@@ -7,7 +7,7 @@ namespace MediAgenda.Interface.IPatient
         Task<IEnumerable<PatientDto>> GetAllAsync();
         Task<PatientDto?> GetByUserIdAsync(Guid userId);
         Task<bool> CreateAsync(CreatePatientDto createPatientDto);
-        Task<bool> UpdateAsync(Guid userId, CreatePatientDto updatePatientDto);
+        Task<bool> UpdateAsync(Guid userId, UpdatePatientDto updatePatientDto);
         Task<bool> DeleteAsync(Guid userId);
     }
 }

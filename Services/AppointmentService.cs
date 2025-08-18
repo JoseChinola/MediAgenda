@@ -47,6 +47,9 @@ namespace MediAgenda.Services
             if (await _repository.PatientHasAppointmentAtSameTime(dto.PatientId, dto.AppointmentDate)) return false;
 
             var appointment = _mapper.Map<Appointment>(dto);
+
+            appointment.AppointmentDate = DateTime.SpecifyKind(dto.AppointmentDate, DateTimeKind.Utc);
+
             await _repository.AddAsync(appointment);
             return await _repository.SaveChangesAsync();
 

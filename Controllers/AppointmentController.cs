@@ -7,6 +7,7 @@ using MediAgenda.Responses;
 using MediAgenda.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MediAgenda.Controllers
 {
@@ -160,5 +161,13 @@ namespace MediAgenda.Controllers
                  });
             
         }
+
+        [HttpGet("available-hours/{doctorId}")]
+        public async Task<IActionResult> GetAvailableHours(Guid doctorId, DateTime date)
+        {
+            var hours = await _service.GetAvailableHoursAsync(doctorId, date);
+            return Ok(hours);
+        }
+
     }
 }

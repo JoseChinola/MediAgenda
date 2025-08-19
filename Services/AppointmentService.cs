@@ -78,31 +78,80 @@ namespace MediAgenda.Services
         public async Task<bool> RescheduleAppointmentAsync(UpdateAppointmentDto dto)
         {
             var appointment = await _repository.GetByIdAsync(dto.Id);
-            
+
             if (appointment == null) return false;
 
             if (appointment.Status == "Completada" || appointment.Status == "Cancelada")
                 return false;
 
-            if (dto.NewAppointmentDate <= DateTime.Now)
+            // Convertir la nueva fecha a UTC
+            var newAppointmentUtc = DateTime.SpecifyKind(dto.NewAppointmentDate, DateTimeKind.Utc);
+
+            if (newAppointmentUtc <= DateTime.UtcNow)
                 return false;
 
+            // Comparar solo por la hora en UTC
+            var newHourUtc = newAppointmentUtc.TimeOfDay;
+
+            // Validar conflicto con el doctor
             var hasConflict = await _repository.ExistsAsync(
-             a => a.DoctorId == appointment.DoctorId &&
-             a.AppointmentDate == dto.NewAppointmentDate &&
-             a.Id != appointment.Id);
+                a => a.DoctorId == appointment.DoctorId &&
+                     a.AppointmentDate.TimeOfDay == newHourUtc &&
+                     a.Id != appointment.Id);
 
             if (hasConflict) return false;
 
+            // Validar conflicto con el paciente
             var patientConflict = await _repository.ExistsAsync(
-             a => a.PatientId == appointment.PatientId &&
-             a.AppointmentDate == dto.NewAppointmentDate &&
-             a.Id != appointment.Id);
+                a => a.PatientId == appointment.PatientId &&
+                     a.AppointmentDate.TimeOfDay == newHourUtc &&
+                     a.Id != appointment.Id);
 
             if (patientConflict) return false;
 
-            appointment.AppointmentDate = dto.NewAppointmentDate;
+            // Reprogramar guardando en UTC
+            appointment.AppointmentDate = newAppointmentUtc;
             return await _repository.SaveChangesAsync();
         }
+
+        public async Task<List<string>> GetAvailableHoursAsync(Guid doctorId, DateTime date)
+        {
+            TimeSpan start, end;
+
+            if (date.DayOfWeek == DayOfWeek.Saturday)
+            {
+                start = new TimeSpan(9, 0, 0);
+                end = new TimeSpan(13, 0, 0);
+            }
+            else if (date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return new List<string>();
+            }
+            else
+            {
+                start = new TimeSpan(8, 0, 0);
+                end = new TimeSpan(16, 30, 0);
+            }
+
+            var allSlots = new List<DateTime>();
+            var localDate = date.Date;
+
+            for (var t = start; t <= end; t = t.Add(new TimeSpan(0, 30, 0)))
+            {
+                var localDateTime = localDate.Add(t);
+                var utcDateTime = DateTime.SpecifyKind(localDateTime, DateTimeKind.Utc);
+                allSlots.Add(utcDateTime);
+            }
+
+            var bookedAppointments = await _repository.GetAppointmentsByDoctorAndDateAsync(doctorId, date);
+
+            var availableSlots = allSlots
+                .Where(slot => !bookedAppointments.Contains(slot))
+                .Select(slot => slot.ToString("HH:mm"))
+                .ToList();
+
+            return availableSlots;
+        }
+
     }
 }

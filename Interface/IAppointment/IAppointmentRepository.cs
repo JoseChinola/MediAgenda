@@ -15,7 +15,7 @@ namespace MediAgenda.Interface.IAppointment
         Task<bool> ExistsAppointmentAtSameTime(Guid doctorId, DateTime appointmentDateTime);
         Task<bool> PatientHasAppointmentAtSameTime(Guid patientId, DateTime appointmentDateTime);
         Task<bool> ExistsAsync(Expression<Func<Appointment, bool>> predicate);
-
+        Task<List<DateTime>> GetAppointmentsByDoctorAndDateAsync(Guid doctorId, DateTime date);
         Task<bool> SaveChangesAsync();
     }
 }

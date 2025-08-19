@@ -13,5 +13,6 @@ namespace MediAgenda.Interface.IAppointment
 
         Task<IEnumerable<AppointmentDto>> GetByDoctorAsync(Guid doctorId);
         Task<IEnumerable<AppointmentDto>> GetByPatientAsync(Guid patientId);
+        Task<List<string>> GetAvailableHoursAsync(Guid doctorId, DateTime date);
     }
 }

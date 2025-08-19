@@ -74,19 +74,31 @@ namespace MediAgenda.Repositories
 
         public async Task<bool> ExistsAppointmentAtSameTime(Guid doctorId,DateTime appointmentDate)
         {
+            var hour = appointmentDate.TimeOfDay;
+
             return await _context.Appointments
-                .AnyAsync(a => a.DoctorId == doctorId && a.AppointmentDate == appointmentDate);
+                .AnyAsync(a => a.DoctorId == doctorId && a.AppointmentDate.TimeOfDay == hour);
         }
 
         public async Task<bool> PatientHasAppointmentAtSameTime(Guid patientId, DateTime appointmentDate)
         {
+            var hour = appointmentDate.TimeOfDay;
             return await _context.Appointments
-                .AnyAsync(a => a.PatientId == patientId && a.AppointmentDate == appointmentDate);
+                .AnyAsync(a => a.PatientId == patientId && a.AppointmentDate.TimeOfDay == hour);
         }
 
         public async Task<bool> ExistsAsync(Expression<Func<Appointment, bool>> predicate)
         {
             return await _context.Appointments.AnyAsync(predicate);
+        }
+
+        public async Task<List<DateTime>> GetAppointmentsByDoctorAndDateAsync(Guid doctorId, DateTime date)
+        {
+            var utcDate = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+            return await _context.Appointments
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate.Date == utcDate.Date)
+                .Select(a => a.AppointmentDate)
+                .ToListAsync();
         }
 
 
